@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://somnus-ai-analyzer.vercel.app/sitemap.xml
