@@ -58,7 +58,6 @@ export const AboutUs: React.FC = () => (
 export const ContactUs: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
-    rating: 5,
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -96,7 +95,7 @@ export const ContactUs: React.FC = () => {
             Thank you for helping us improve RestPulse. Your insights are stored locally and help us build a better experience for the community.
           </p>
           <button 
-            onClick={() => { setIsSubmitted(false); setFormData({ name: '', rating: 5, message: '' }); }}
+            onClick={() => { setIsSubmitted(false); setFormData({ name: '', message: '' }); }}
             className="px-8 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-black transition-all"
           >
             Send More Feedback
@@ -148,27 +147,11 @@ export const ContactUs: React.FC = () => {
               />
             </div>
 
-            <div className="space-y-3">
-              <label className="block text-sm font-bold text-slate-700 uppercase tracking-wider">Rating</label>
-              <div className="flex gap-2">
-                {[1, 2, 3, 4, 5].map(num => (
-                  <button
-                    key={num}
-                    type="button"
-                    onClick={() => setFormData({...formData, rating: num})}
-                    className={`flex-1 h-12 rounded-xl text-lg font-black transition-all ${formData.rating >= num ? 'bg-amber-400 text-amber-900 shadow-lg shadow-amber-200/50' : 'bg-slate-100 text-slate-400'}`}
-                  >
-                    ★
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <div className="space-y-2">
               <label className="block text-sm font-bold text-slate-700 uppercase tracking-wider">Comments</label>
               <textarea 
                 required
-                rows={4}
+                rows={6}
                 placeholder="What features would you like to see next?"
                 className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 resize-none"
                 value={formData.message}

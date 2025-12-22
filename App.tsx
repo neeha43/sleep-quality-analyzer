@@ -65,7 +65,6 @@ const App: React.FC = () => {
                 </p>
               </div>
 
-              {/* Top Ad Placeholder */}
               <div className="w-full h-24 bg-slate-100 border border-slate-200 border-dashed rounded-xl flex items-center justify-center text-slate-400 text-xs uppercase font-bold" aria-label="Advertisement">
                 ADVERTISEMENT
               </div>
@@ -177,13 +176,13 @@ const App: React.FC = () => {
 
       {showCookieBanner && (
         <div role="region" aria-label="Cookie Consent" className="fixed bottom-0 inset-x-0 z-[100] p-4 animate-in slide-in-from-bottom-full duration-500">
-          <div className="max-w-4xl mx-auto bg-slate-900 text-white p-6 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-700">
+          <div className="max-w-4xl mx-auto bg-white p-6 rounded-[2rem] shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-200">
             <div className="flex-1">
-              <h4 className="font-bold mb-1">Privacy & Ad Personalization</h4>
-              <p className="text-slate-400 text-sm leading-relaxed">We use cookies to enhance your experience and deliver relevant content. By accepting, you agree to our data practices outlined in our <button onClick={() => setView('privacy')} className="underline text-indigo-400 hover:text-indigo-300">Privacy Policy</button>.</p>
+              <h4 className="font-display font-black text-slate-900 mb-1">Privacy & Personalization</h4>
+              <p className="text-slate-600 text-sm leading-relaxed">We use cookies to enhance your experience. By accepting, you agree to our practices outlined in our <button onClick={() => setView('privacy')} className="underline font-bold text-indigo-600 hover:text-indigo-500">Privacy Policy</button>.</p>
             </div>
             <div className="flex gap-3 whitespace-nowrap">
-              <button onClick={handleCookieAccept} className="px-8 py-3 bg-indigo-600 hover:bg-indigo-500 rounded-xl font-bold text-sm transition-colors shadow-lg shadow-indigo-600/20">Accept All</button>
+              <button onClick={handleCookieAccept} className="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-indigo-200">Accept All</button>
             </div>
           </div>
         </div>
