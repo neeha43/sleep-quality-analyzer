@@ -31,9 +31,13 @@ const App: React.FC = () => {
     try {
       const result = await analyzeSleepQuality(data);
       setAnalysis(result);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to generate report. Please check your connection and try again.");
+    } catch (err: any) {
+      console.error("Assessment Error:", err);
+      // Provide more specific error messages if possible
+      const message = err?.message?.includes("API Key") 
+        ? "System configuration error. Please contact support."
+        : "Unable to reach the analysis engine. Please verify your internet connection and try again.";
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -70,8 +74,8 @@ const App: React.FC = () => {
               </div>
 
               {error && (
-                <div role="alert" className="bg-rose-50 border border-rose-200 p-4 rounded-2xl text-rose-600 font-medium text-center max-w-lg mx-auto">
-                  {error}
+                <div role="alert" className="bg-rose-50 border border-rose-200 p-6 rounded-2xl text-rose-600 font-bold text-center max-w-lg mx-auto animate-in fade-in slide-in-from-bottom-4">
+                  <p>{error}</p>
                 </div>
               )}
 
