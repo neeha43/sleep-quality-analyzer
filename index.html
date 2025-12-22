@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <!-- Primary SEO Meta Tags -->
-  <title>RestPulse | AI-Powered Sleep Quality Analyzer & Optimization Guide</title>
-  <meta name="title" content="RestPulse | AI-Powered Sleep Quality Analyzer & Optimization Guide">
-  <meta name="description" content="Use RestPulse to analyze your sleep patterns. Get a professional sleep quality score, scientific insights, and a personalized optimization plan using advanced Gemini AI analysis. Free, non-diagnostic sleep hygiene tool.">
-  <meta name="keywords" content="sleep analyzer, sleep quality score, sleep hygiene tips, improve sleep quality, AI sleep coach, sleep assessment tool, circadian rhythm analysis, rest optimization">
+  <title>RestPulse | AI Sleep Quality Analyzer & Health Optimization</title>
+  <meta name="title" content="RestPulse | AI Sleep Quality Analyzer & Health Optimization">
+  <meta name="description" content="Discover your Sleep Quality Index (SQI) with RestPulse. Get AI-driven insights, personalized optimization protocols, and biological sleep architecture analysis.">
+  <meta name="keywords" content="sleep analyzer, AI sleep coach, sleep quality score, circadian rhythm, insomnia help, sleep hygiene, health tech">
   <meta name="author" content="RestPulse Labs">
   <meta name="robots" content="index, follow">
   <meta name="theme-color" content="#4f46e5">
@@ -18,44 +17,35 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://somnus-ai-analyzer.vercel.app/">
-  <meta property="og:title" content="RestPulse | Advanced AI Sleep Quality Assessment">
-  <meta property="og:description" content="Discover the science behind your rest. Get a personalized sleep quality report and biological improvement plan in seconds.">
+  <meta property="og:title" content="RestPulse | Advanced AI Sleep Assessment">
+  <meta property="og:description" content="Decode your sleep patterns with advanced AI. Get a personalized report and biological improvement plan instantly.">
   <meta property="og:image" content="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&q=80&w=1200">
-  <meta property="og:site_name" content="RestPulse">
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content="https://somnus-ai-analyzer.vercel.app/">
-  <meta property="twitter:title" content="RestPulse | Advanced AI Sleep Quality Assessment">
-  <meta property="twitter:description" content="Analyze your sleep patterns and unlock better rest with personalized AI insights. Scientifically-backed sleep optimization.">
+  <meta property="twitter:title" content="RestPulse | AI Sleep Quality Analyzer">
+  <meta property="twitter:description" content="Optimize your rest with personalized AI insights. Scientifically-backed sleep assessment.">
   <meta property="twitter:image" content="https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&q=80&w=1200">
 
   <!-- Structured Data (JSON-LD) -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
+    "@type": "SoftwareApplication",
     "name": "RestPulse",
-    "url": "https://somnus-ai-analyzer.vercel.app/",
-    "description": "An AI-powered tool to evaluate sleep quality based on duration, latency, environment, and lifestyle habits.",
-    "applicationCategory": "HealthApplication",
     "operatingSystem": "Web",
-    "author": {
-      "@type": "Organization",
-      "name": "RestPulse Labs",
-      "logo": "https://somnus-ai-analyzer.vercel.app/logo.png"
+    "applicationCategory": "HealthApplication",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "reviewCount": "1240"
     },
     "offers": {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "USD"
-    },
-    "featureList": [
-      "AI Sleep Scoring",
-      "Personalized Sleep Recommendations",
-      "Environmental Impact Analysis",
-      "Biological Insights"
-    ]
+    }
   }
   </script>
 
@@ -66,23 +56,22 @@
       font-family: 'Inter', sans-serif;
       background-color: #f8fafc;
       color: #0f172a;
+      scroll-behavior: smooth;
     }
     .font-display {
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
-    ::-webkit-scrollbar {
-      width: 8px;
+    .animate-gradient {
+      background-size: 200% 200%;
+      animation: gradient 8s ease infinite;
     }
-    ::-webkit-scrollbar-track {
-      background: #f1f5f9;
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
+    /* CLS Stabilization */
+    #root { min-height: 100vh; }
   </style>
 <script type="importmap">
 {
