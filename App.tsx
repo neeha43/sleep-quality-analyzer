@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { SleepData, AnalysisResponse } from './types';
 import SleepForm from './components/SleepForm';
@@ -115,13 +114,13 @@ const App: React.FC = () => {
           <button 
             onClick={() => {setView('home'); setAnalysis(null);}} 
             className="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-lg p-1"
-            aria-label="SomnusAI Home"
+            aria-label="RestPulse Home"
           >
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition-transform">
               <Icons.Moon />
             </div>
             <span className="text-xl font-display font-extrabold tracking-tight text-slate-900">
-              SOMNUS<span className="text-indigo-600">AI</span>
+              REST<span className="text-indigo-600">PULSE</span>
             </span>
           </button>
           <nav className="hidden md:flex gap-8" aria-label="Primary Navigation">
@@ -143,7 +142,7 @@ const App: React.FC = () => {
               <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white scale-75" aria-hidden="true">
                 <Icons.Moon />
               </div>
-              <span className="font-display font-black text-slate-900">SOMNUSAI</span>
+              <span className="font-display font-black text-slate-900">RESTPULSE</span>
             </div>
             <p className="text-slate-500 text-sm leading-relaxed">Advanced Sleep Hygiene Assessment. Empowering individuals with AI-driven biological insights for better restorative health.</p>
           </div>
@@ -172,7 +171,7 @@ const App: React.FC = () => {
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 mt-16 pt-8 border-t border-slate-50 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-400 text-xs font-medium">© 2024 SomnusAI Labs. Designed for health awareness. Not a medical diagnostic tool.</p>
+          <p className="text-slate-400 text-xs font-medium">© 2024 RestPulse Labs. Designed for health awareness. Not a medical diagnostic tool.</p>
         </div>
       </footer>
 

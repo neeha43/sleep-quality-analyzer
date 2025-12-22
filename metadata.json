@@ -1,5 +1,5 @@
 {
-  "name": "Copy of SomnusAI - Sleep Quality Analyzer",
+  "name": "RestPulse - Sleep Quality Analyzer",
   "description": "A high-end sleep analysis platform that uses Gemini AI to evaluate sleep patterns, provide quality scores, and offer personalized improvement strategies based on user habits and environment.",
   "requestFramePermissions": []
 }

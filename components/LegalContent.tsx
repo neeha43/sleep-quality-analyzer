@@ -1,76 +1,190 @@
+import React, { useState, useEffect } from 'react';
 
-import React from 'react';
-
-export const PrivacyPolicy = () => (
-  <div className="prose prose-slate max-w-none">
+export const PrivacyPolicy: React.FC = () => (
+  <div className="prose prose-slate max-w-none animate-in fade-in duration-500">
     <h1 className="text-3xl font-display font-black text-slate-900 mb-6">Privacy Policy</h1>
     <p className="text-slate-600 mb-4">Last Updated: May 20, 2024</p>
-    <p className="mb-4">At SomnusAI, accessible from somnus-ai-analyzer.vercel.app, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by SomnusAI and how we use it.</p>
+    <p className="mb-4">At RestPulse, accessible from somnus-ai-analyzer.vercel.app, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by RestPulse and how we use it.</p>
     
     <h2 className="text-xl font-bold mt-8 mb-4">Log Files</h2>
-    <p className="mb-4">SomnusAI follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services' analytics. The information collected by log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks.</p>
+    <p className="mb-4">RestPulse follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services' analytics. The information collected by log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks.</p>
 
     <h2 className="text-xl font-bold mt-8 mb-4">Cookies and Web Beacons</h2>
-    <p className="mb-4">Like any other website, SomnusAI uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information.</p>
+    <p className="mb-4">Like any other website, RestPulse uses 'cookies'. These cookies are used to store information including visitors' preferences, and the pages on the website that the visitor accessed or visited. The information is used to optimize the users' experience by customizing our web page content based on visitors' browser type and/or other information.</p>
 
     <h2 className="text-xl font-bold mt-8 mb-4">Google DoubleClick DART Cookie</h2>
-    <p className="mb-4">Google is one of a third-party vendor on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL – <a href="https://policies.google.com/technologies/ads" className="text-indigo-600 underline">https://policies.google.com/technologies/ads</a></p>
+    <p className="mb-4">Google is one of a third-party vendor on our site. It also uses cookies, known as DART cookies, to serve ads to our site visitors based upon their visit to our site and other sites on the internet. However, visitors may choose to decline the use of DART cookies by visiting the Google ad and content network Privacy Policy at the following URL – <a href="https://policies.google.com/technologies/ads" className="text-indigo-600 underline" target="_blank" rel="noopener noreferrer">https://policies.google.com/technologies/ads</a></p>
 
     <h2 className="text-xl font-bold mt-8 mb-4">Our Advertising Partners</h2>
     <p className="mb-4">Some of advertisers on our site may use cookies and web beacons. Each of our advertising partners has their own Privacy Policy for their policies on user data.</p>
   </div>
 );
 
-export const TermsOfService = () => (
-  <div className="prose prose-slate max-w-none">
+export const TermsOfService: React.FC = () => (
+  <div className="prose prose-slate max-w-none animate-in fade-in duration-500">
     <h1 className="text-3xl font-display font-black text-slate-900 mb-6">Terms of Service</h1>
     <h2 className="text-xl font-bold mt-8 mb-4">1. Acceptance of Terms</h2>
     <p className="mb-4">By accessing this Website, you are agreeing to be bound by these Website Terms and Conditions of Use and agree that you are responsible for the agreement with any applicable local laws.</p>
     
     <h2 className="text-xl font-bold mt-8 mb-4">2. Medical Disclaimer</h2>
     <p className="mb-4 bg-amber-50 border border-amber-200 p-4 rounded-xl font-medium text-amber-800 italic">
-      SomnusAI is an educational and self-assessment tool. The scores and recommendations provided are generated by Artificial Intelligence and are not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
+      RestPulse is an educational and self-assessment tool. The scores and recommendations provided are generated by Artificial Intelligence and are not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.
     </p>
 
     <h2 className="text-xl font-bold mt-8 mb-4">3. Use License</h2>
-    <p className="mb-4">Permission is granted to temporarily download one copy of the materials on SomnusAI's Website for personal, non-commercial transitory viewing only.</p>
+    <p className="mb-4">Permission is granted to temporarily download one copy of the materials on RestPulse's Website for personal, non-commercial transitory viewing only.</p>
   </div>
 );
 
-export const AboutUs = () => (
-  <div className="prose prose-slate max-w-none">
-    <h1 className="text-3xl font-display font-black text-slate-900 mb-6">About SomnusAI</h1>
-    <p className="text-lg text-slate-700 mb-6 leading-relaxed">
-      SomnusAI was founded by a team of technology enthusiasts and sleep researchers dedicated to making chronobiology accessible to everyone. We believe that understanding the nuances of your rest shouldn't require a sleep lab.
+export const AboutUs: React.FC = () => (
+  <div className="prose prose-slate max-w-none animate-in fade-in duration-500">
+    <h1 className="text-3xl font-display font-black text-slate-900 mb-6">About RestPulse</h1>
+    <p className="text-lg text-slate-700 mb-6 leading-relaxed font-medium">
+      RestPulse was founded by a team of technology enthusiasts and sleep researchers dedicated to making chronobiology accessible to everyone. We believe that understanding the nuances of your rest shouldn't require a sleep lab.
     </p>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
-      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+      <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
         <h3 className="font-bold text-slate-900 mb-2">Our Mission</h3>
-        <p className="text-slate-600">To provide high-quality, AI-driven sleep analysis that empowers individuals to take control of their restorative health through data-backed behavioral changes.</p>
+        <p className="text-slate-600 leading-relaxed">To provide high-quality, AI-driven sleep analysis that empowers individuals to take control of their restorative health through data-backed behavioral changes.</p>
       </div>
-      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100">
+      <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm">
         <h3 className="font-bold text-slate-900 mb-2">Our Technology</h3>
-        <p className="text-slate-600">We utilize the Gemini Pro API to process complex environmental and habit data, mapping it against established sleep architecture patterns.</p>
+        <p className="text-slate-600 leading-relaxed">We utilize advanced LLM architectures to process complex environmental and habit data, mapping it against established sleep architecture patterns.</p>
       </div>
     </div>
   </div>
 );
 
-export const ContactUs = () => (
-  <div className="prose prose-slate max-w-none">
-    <h1 className="text-3xl font-display font-black text-slate-900 mb-6">Contact Us</h1>
-    <p className="mb-8 text-slate-600">Have questions about our sleep assessment or need assistance? Our support team is here to help.</p>
-    <div className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm max-w-lg">
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">Email</label>
-          <p className="text-indigo-600 font-medium">support@somnusai-demo.com</p>
+export const ContactUs: React.FC = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    rating: 5,
+    message: ''
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [feedbackCount, setFeedbackCount] = useState(0);
+
+  useEffect(() => {
+    const existing = JSON.parse(localStorage.getItem('restpulse-feedback') || '[]');
+    setFeedbackCount(existing.length);
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const newFeedback = {
+      ...formData,
+      timestamp: new Date().toISOString()
+    };
+    
+    const existing = JSON.parse(localStorage.getItem('restpulse-feedback') || '[]');
+    const updated = [...existing, newFeedback];
+    localStorage.setItem('restpulse-feedback', JSON.stringify(updated));
+    
+    setIsSubmitted(true);
+    setFeedbackCount(updated.length);
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="max-w-xl mx-auto py-12 animate-in fade-in zoom-in-95 duration-500">
+        <div className="bg-white border border-slate-200 p-10 rounded-[3rem] shadow-xl text-center space-y-6">
+          <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto animate-pulse">
+            <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 className="text-3xl font-display font-black text-slate-900">Feedback Received!</h2>
+          <p className="text-slate-600 text-lg leading-relaxed">
+            Thank you for helping us improve RestPulse. Your insights are stored locally and help us build a better experience for the community.
+          </p>
+          <button 
+            onClick={() => { setIsSubmitted(false); setFormData({ name: '', rating: 5, message: '' }); }}
+            className="px-8 py-3 bg-slate-900 text-white rounded-2xl font-bold hover:bg-black transition-all"
+          >
+            Send More Feedback
+          </button>
         </div>
-        <div>
-          <label className="block text-sm font-bold text-slate-700 mb-1">Response Time</label>
-          <p className="text-slate-600">We typically respond within 24-48 business hours.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="animate-in fade-in duration-500 max-w-4xl mx-auto">
+      <div className="flex flex-col md:flex-row gap-12">
+        <div className="flex-1 space-y-6">
+          <h1 className="text-4xl font-display font-black text-slate-900">Contact & Feedback</h1>
+          <p className="text-slate-600 text-lg leading-relaxed">
+            Have suggestions for RestPulse? We'd love to hear how the AI analysis is working for you. Your feedback is stored in your local browser storage for your own records.
+          </p>
+          
+          <div className="grid gap-4">
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+              <h3 className="font-bold text-slate-900 mb-1">Support Email</h3>
+              <p className="text-indigo-600 font-medium">support@restpulse-demo.com</p>
+            </div>
+            <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+              <h3 className="font-bold text-slate-900 mb-1">Response Time</h3>
+              <p className="text-slate-600 font-medium">Within 24-48 business hours.</p>
+            </div>
+            {feedbackCount > 0 && (
+              <div className="bg-indigo-50 p-6 rounded-3xl border border-indigo-100">
+                <p className="text-indigo-700 font-bold text-sm">
+                   You have shared <span className="text-indigo-900 font-black">{feedbackCount}</span> suggestions with us so far.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex-1">
+          <form onSubmit={handleSubmit} className="bg-white border border-slate-200 p-8 rounded-[2.5rem] shadow-xl shadow-slate-100/50 space-y-6">
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-slate-700 uppercase tracking-wider">Your Name</label>
+              <input 
+                required
+                type="text" 
+                placeholder="Sleep Enthusiast"
+                className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900"
+                value={formData.name}
+                onChange={e => setFormData({...formData, name: e.target.value})}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <label className="block text-sm font-bold text-slate-700 uppercase tracking-wider">Rating</label>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map(num => (
+                  <button
+                    key={num}
+                    type="button"
+                    onClick={() => setFormData({...formData, rating: num})}
+                    className={`flex-1 h-12 rounded-xl text-lg font-black transition-all ${formData.rating >= num ? 'bg-amber-400 text-amber-900 shadow-lg shadow-amber-200/50' : 'bg-slate-100 text-slate-400'}`}
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-bold text-slate-700 uppercase tracking-wider">Comments</label>
+              <textarea 
+                required
+                rows={4}
+                placeholder="What features would you like to see next?"
+                className="w-full px-5 py-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-500 font-medium text-slate-900 resize-none"
+                value={formData.message}
+                onChange={e => setFormData({...formData, message: e.target.value})}
+              />
+            </div>
+
+            <button 
+              type="submit"
+              className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-2xl shadow-xl shadow-indigo-200 transition-all active:scale-[0.98] uppercase tracking-widest text-sm"
+            >
+              Submit Feedback
+            </button>
+          </form>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
