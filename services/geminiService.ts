@@ -1,10 +1,9 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import { SleepData, AnalysisResponse } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
-
 export const analyzeSleepQuality = async (data: SleepData): Promise<AnalysisResponse> => {
+  // Initialize AI client inside the function to ensure the latest API key is used
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const model = 'gemini-3-flash-preview';
   
   const prompt = `
@@ -58,6 +57,9 @@ export const analyzeSleepQuality = async (data: SleepData): Promise<AnalysisResp
     }
   });
 
-  const result = JSON.parse(response.text);
+  const text = response.text;
+  if (!text) throw new Error("No response from AI");
+  
+  const result = JSON.parse(text);
   return result as AnalysisResponse;
 };

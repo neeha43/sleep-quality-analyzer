@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { setup } from 'twind/shim';
+import { setup } from 'twind';
+import 'twind/shim';
 import App from './App';
 
 // Setup Twind for production-ready Tailwind processing
