@@ -1,5 +1,4 @@
-import React from 'react';
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
+import React, { useState } from 'react';
 import { AnalysisResponse } from '../types';
 import { Icons } from '../constants';
 
@@ -9,11 +8,41 @@ interface AnalysisDisplayProps {
 }
 
 const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) => {
-  const chartData = [
-    { subject: 'Efficiency', A: analysis.breakdown.efficiency, fullMark: 100 },
-    { subject: 'Consistency', A: analysis.breakdown.consistency, fullMark: 100 },
-    { subject: 'Environment', A: analysis.breakdown.environment, fullMark: 100 },
-    { subject: 'Lifestyle', A: analysis.breakdown.lifestyle, fullMark: 100 },
+  const [hoveredMetric, setHoveredMetric] = useState<string | null>(null);
+
+  const metrics = [
+    { 
+      key: 'efficiency', 
+      label: 'Sleep Depth', 
+      value: analysis.breakdown.efficiency, 
+      desc: 'How well you actually rest while in bed.',
+      detail: 'This counts how much of your night is spent in deep, restorative sleep rather than just lying awake or tossing and turning.',
+      color: 'bg-blue-500'
+    },
+    { 
+      key: 'consistency', 
+      label: 'Your Routine', 
+      value: analysis.breakdown.consistency, 
+      desc: 'How steady your bedtime habits are.',
+      detail: 'A regular routine trains your brain to start "shutting down" at the same time every night, making it easier to drift off.',
+      color: 'bg-indigo-500'
+    },
+    { 
+      key: 'environment', 
+      label: 'Room Comfort', 
+      value: analysis.breakdown.environment, 
+      desc: 'How your bedroom helps you sleep.',
+      detail: 'Things like bright lights, loud noises, or being too warm can secretly wake you up even if you don\'t remember it.',
+      color: 'bg-emerald-500'
+    },
+    { 
+      key: 'lifestyle', 
+      label: 'Daily Habits', 
+      value: analysis.breakdown.lifestyle, 
+      desc: 'How your day affects your night.',
+      detail: 'Caffeine, late-night snacking, or using your phone before bed can keep your brain over-active when it should be resting.',
+      color: 'bg-purple-500'
+    },
   ];
 
   const getScoreColor = (score: number) => {
@@ -40,9 +69,8 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
               <circle
                 cx="96" cy="96" r="80"
                 fill="transparent"
-                stroke="currentColor"
+                stroke="white"
                 strokeWidth="12"
-                className="text-white"
               />
               <circle
                 cx="96" cy="96" r="80"
@@ -57,7 +85,7 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className={`text-6xl font-black font-display ${getScoreColor(analysis.score)}`}>{analysis.score}</span>
-              <span className="text-slate-400 text-xs uppercase tracking-widest font-bold">Overall Score</span>
+              <span className="text-slate-400 text-xs uppercase tracking-widest font-bold">Sleep Index</span>
             </div>
           </div>
 
@@ -66,81 +94,99 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
               <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4 bg-white border border-slate-200 ${getScoreColor(analysis.score)}`}>
                 {analysis.qualityLabel} Quality
               </span>
-              <h2 className="text-4xl font-display font-black text-slate-900 mb-4 leading-tight">Sleep Architecture Report</h2>
+              <h2 className="text-4xl font-display font-black text-slate-900 mb-4 leading-tight">Your Sleep Report</h2>
               <p className="text-slate-600 leading-relaxed text-xl font-medium">{analysis.summary}</p>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Radar Analysis Card */}
-        <article className="bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm">
-          <h3 className="text-xl font-display font-black text-slate-900 mb-8 flex items-center gap-3">
-            <span className="w-2 h-8 bg-indigo-600 rounded-full"></span>
-            Performance Metrics
-          </h3>
-          <div className="h-72 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
-                <PolarGrid stroke="#e2e8f0" />
-                <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 13, fontWeight: 700 }} />
-                <PolarRadiusAxis angle={30} domain={[0, 100]} tick={false} axisLine={false} />
-                <Radar
-                  name="Quality"
-                  dataKey="A"
-                  stroke="#4f46e5"
-                  fill="#4f46e5"
-                  fillOpacity={0.15}
+      {/* Simplified Metrics Section */}
+      <section className="bg-white border border-slate-200 p-8 md:p-10 rounded-[2.5rem] shadow-sm">
+        <h3 className="text-2xl font-display font-black text-slate-900 mb-2 flex items-center gap-3">
+          <span className="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><Icons.Zap /></span>
+          Your Sleep Vitals
+        </h3>
+        <p className="text-slate-500 mb-8 font-medium">Hover over any bar to see what it means in simple terms.</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {metrics.map((m) => (
+            <div 
+              key={m.key}
+              onMouseEnter={() => setHoveredMetric(m.key)}
+              onMouseLeave={() => setHoveredMetric(null)}
+              className="relative p-6 rounded-3xl border border-slate-100 hover:border-indigo-200 transition-all bg-slate-50/50 group cursor-help"
+            >
+              <div className="flex justify-between items-end mb-4">
+                <div>
+                  <h4 className="text-lg font-bold text-slate-900">{m.label}</h4>
+                  <p className="text-sm text-slate-500">{m.desc}</p>
+                </div>
+                <span className="text-2xl font-black text-slate-900">{m.value}%</span>
+              </div>
+              
+              <div className="w-full bg-white h-3 rounded-full overflow-hidden border border-slate-200">
+                <div 
+                  className={`h-full transition-all duration-1000 ease-out ${m.color}`}
+                  style={{ width: `${m.value}%` }}
                 />
-              </RadarChart>
-            </ResponsiveContainer>
+              </div>
+
+              {/* Hover Details - Simple explanation */}
+              <div className={`mt-4 overflow-hidden transition-all duration-300 ${hoveredMetric === m.key ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <p className="text-sm text-indigo-600 font-bold leading-relaxed bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+                  {m.detail}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Simplified Recommendations */}
+        <article className="bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm">
+          <h3 className="text-xl font-display font-black text-slate-900 mb-6 flex items-center gap-3">
+            <span className="w-2 h-8 bg-indigo-600 rounded-full"></span>
+            Easy Changes to Try
+          </h3>
+          <div className="space-y-4">
+            {analysis.recommendations.map((rec, idx) => (
+              <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                <div className="flex-shrink-0 mt-1 text-emerald-500">
+                  <Icons.CheckCircle />
+                </div>
+                <p className="text-slate-700 font-bold text-sm leading-snug">{rec}</p>
+              </div>
+            ))}
           </div>
         </article>
 
-        {/* Scientific Insights */}
+        {/* Why this happens */}
         <article className="bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm">
-          <h3 className="text-xl font-display font-black text-slate-900 mb-8 flex items-center gap-3">
+          <h3 className="text-xl font-display font-black text-slate-900 mb-6 flex items-center gap-3">
             <span className="w-2 h-8 bg-purple-600 rounded-full"></span>
-            Biological Insights
+            What's Happening?
           </h3>
           <div className="space-y-4">
             {analysis.scientificInsights.map((insight, idx) => (
-              <div key={idx} className="flex gap-4 p-5 rounded-2xl bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors">
-                <div className="w-10 h-10 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-center flex-shrink-0">
-                  <span className="text-indigo-600 font-black text-lg">{idx + 1}</span>
+              <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                <div className="w-8 h-8 rounded-lg bg-white shadow-sm border border-slate-100 flex items-center justify-center flex-shrink-0 text-indigo-600 font-black text-sm">
+                  {idx + 1}
                 </div>
-                <p className="text-slate-600 text-sm italic font-medium leading-relaxed">"{insight}"</p>
+                <p className="text-slate-600 text-sm font-medium italic leading-relaxed">{insight}</p>
               </div>
             ))}
           </div>
         </article>
       </div>
 
-      {/* Plan Section */}
-      <section className="bg-white border border-slate-200 p-8 md:p-10 rounded-[2.5rem] shadow-sm">
-        <h3 className="text-2xl font-display font-black text-slate-900 mb-8 flex items-center gap-4">
-          <span className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl"><Icons.CheckCircle /></span>
-          Personalized Optimization Protocol
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {analysis.recommendations.map((rec, idx) => (
-            <div key={idx} className="group flex items-start gap-5 p-6 rounded-3xl bg-white border border-slate-100 hover:border-indigo-200 hover:bg-indigo-50/30 transition-all cursor-default">
-              <div className="mt-1 text-indigo-400 group-hover:text-indigo-600 transition-colors">
-                <Icons.CheckCircle />
-              </div>
-              <p className="text-slate-700 font-bold leading-snug">{rec}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <div className="flex justify-center pb-20">
         <button
           onClick={onReset}
           className="px-12 py-5 bg-[#4f46e5] hover:bg-[#4338ca] text-white font-black rounded-[1.5rem] transition-all shadow-xl shadow-indigo-200 uppercase tracking-widest text-sm"
         >
-          New Assessment
+          Check Again
         </button>
       </div>
     </div>
