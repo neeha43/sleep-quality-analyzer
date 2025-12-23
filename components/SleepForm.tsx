@@ -24,15 +24,20 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
     }
   });
 
-  const handleNext = () => setStep(prev => Math.min(prev + 1, 3));
-  const handleBack = () => setStep(prev => Math.max(prev - 1, 1));
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleNext = (e: React.MouseEvent) => {
     e.preventDefault();
-    if (step === 3) {
+    setStep(prev => Math.min(prev + 1, 3));
+  };
+
+  const handleBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setStep(prev => Math.max(prev - 1, 1));
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (step === 3 && !isLoading) {
       onSubmit(formData);
-    } else {
-      handleNext();
     }
   };
 
@@ -53,7 +58,7 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleFormSubmit} className="space-y-8">
         {step === 1 && (
           <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <h3 className="text-xl font-bold text-slate-900 flex items-center gap-3">
@@ -151,7 +156,7 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
           <div className="space-y-8 animate-in fade-in slide-in-from-right-4 duration-500">
             <h3 className="text-xl font-bold text-slate-900 flex items-center gap-3">
               <span className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><Icons.Thermometer /></span>
-              Your Bedroom Environment
+              Bedroom Environment
             </h3>
             
             <div className="space-y-6">
@@ -208,7 +213,7 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
           </div>
         )}
 
-        <div className="flex gap-4 pt-8">
+        <div className="flex flex-col sm:flex-row gap-4 pt-8">
           {step > 1 && (
             <button
               type="button"
@@ -231,19 +236,20 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`flex-[2] py-5 px-6 rounded-2xl font-black transition-all shadow-xl flex items-center justify-center gap-3 uppercase tracking-widest text-sm ${
-                isLoading 
-                ? 'bg-slate-200 text-slate-400 cursor-not-allowed' 
-                : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 active:scale-[0.98]'
+              className={`flex-[2] py-5 px-6 rounded-2xl font-black transition-all shadow-xl flex items-center justify-center gap-3 uppercase tracking-widest text-sm bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : 'active:scale-[0.98]'
               }`}
             >
               {isLoading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Analyzing...
                 </>
               ) : (
-                'Generate Insights'
+                <>
+                  <Icons.Zap />
+                  Generate Insights
+                </>
               )}
             </button>
           )}

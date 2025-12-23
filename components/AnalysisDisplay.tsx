@@ -13,35 +13,35 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
   const metrics = [
     { 
       key: 'efficiency', 
-      label: 'Sleep Depth', 
+      label: 'Sleep Power', 
       value: analysis.breakdown.efficiency, 
-      desc: 'How well you actually rest while in bed.',
-      detail: 'This counts how much of your night is spent in deep, restorative sleep rather than just lying awake or tossing and turning.',
-      color: 'bg-blue-500'
+      desc: 'How well your body recharged.',
+      detail: 'This shows if you actually slept well while in bed. Higher numbers mean you spent more time truly resting.',
+      color: '#3b82f6' // Blue
     },
     { 
       key: 'consistency', 
-      label: 'Your Routine', 
+      label: 'Your Rhythm', 
       value: analysis.breakdown.consistency, 
-      desc: 'How steady your bedtime habits are.',
-      detail: 'A regular routine trains your brain to start "shutting down" at the same time every night, making it easier to drift off.',
-      color: 'bg-indigo-500'
+      desc: 'How steady your bedtime is.',
+      detail: 'Keeping a steady schedule helps your body clock work perfectly so you fall asleep faster.',
+      color: '#6366f1' // Indigo
     },
     { 
       key: 'environment', 
-      label: 'Room Comfort', 
+      label: 'Bedroom Peace', 
       value: analysis.breakdown.environment, 
-      desc: 'How your bedroom helps you sleep.',
-      detail: 'Things like bright lights, loud noises, or being too warm can secretly wake you up even if you don\'t remember it.',
-      color: 'bg-emerald-500'
+      desc: 'How cozy your room is.',
+      detail: 'A dark, quiet, and cool room helps you stay asleep longer without small wake-ups.',
+      color: '#10b981' // Emerald
     },
     { 
       key: 'lifestyle', 
-      label: 'Daily Habits', 
+      label: 'Daily Choices', 
       value: analysis.breakdown.lifestyle, 
-      desc: 'How your day affects your night.',
-      detail: 'Caffeine, late-night snacking, or using your phone before bed can keep your brain over-active when it should be resting.',
-      color: 'bg-purple-500'
+      desc: 'How your day affected your night.',
+      detail: 'Choices like caffeine and late-night phone use can keep your brain too active at bedtime.',
+      color: '#a855f7' // Purple
     },
   ];
 
@@ -66,12 +66,7 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
         <div className="flex flex-col md:flex-row items-center gap-10">
           <div className="relative flex-shrink-0">
             <svg className="w-48 h-48 transform -rotate-90">
-              <circle
-                cx="96" cy="96" r="80"
-                fill="transparent"
-                stroke="white"
-                strokeWidth="12"
-              />
+              <circle cx="96" cy="96" r="80" fill="transparent" stroke="white" strokeWidth="12" />
               <circle
                 cx="96" cy="96" r="80"
                 fill="transparent"
@@ -85,17 +80,17 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className={`text-6xl font-black font-display ${getScoreColor(analysis.score)}`}>{analysis.score}</span>
-              <span className="text-slate-400 text-xs uppercase tracking-widest font-bold">Sleep Index</span>
+              <span className="text-slate-400 text-xs uppercase tracking-widest font-bold font-sans">Sleep Score</span>
             </div>
           </div>
 
           <div className="flex-1 space-y-4 text-center md:text-left">
             <div>
               <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest mb-4 bg-white border border-slate-200 ${getScoreColor(analysis.score)}`}>
-                {analysis.qualityLabel} Quality
+                {analysis.qualityLabel} Sleep
               </span>
-              <h2 className="text-4xl font-display font-black text-slate-900 mb-4 leading-tight">Your Sleep Report</h2>
-              <p className="text-slate-600 leading-relaxed text-xl font-medium">{analysis.summary}</p>
+              <h2 className="text-4xl font-display font-black text-slate-900 mb-4 leading-tight">Your Result</h2>
+              <p className="text-slate-700 leading-relaxed text-xl font-medium max-w-xl">{analysis.summary}</p>
             </div>
           </div>
         </div>
@@ -104,10 +99,10 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
       {/* Simplified Metrics Section */}
       <section className="bg-white border border-slate-200 p-8 md:p-10 rounded-[2.5rem] shadow-sm">
         <h3 className="text-2xl font-display font-black text-slate-900 mb-2 flex items-center gap-3">
-          <span className="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><Icons.Zap /></span>
-          Your Sleep Vitals
+          <span className="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><Icons.Info /></span>
+          The Breakdown
         </h3>
-        <p className="text-slate-500 mb-8 font-medium">Hover over any bar to see what it means in simple terms.</p>
+        <p className="text-slate-500 mb-8 font-medium">Hover to learn more about each part.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {metrics.map((m) => (
@@ -115,28 +110,28 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
               key={m.key}
               onMouseEnter={() => setHoveredMetric(m.key)}
               onMouseLeave={() => setHoveredMetric(null)}
-              className="relative p-6 rounded-3xl border border-slate-100 hover:border-indigo-200 transition-all bg-slate-50/50 group cursor-help"
+              className="relative p-6 rounded-3xl border border-slate-100 bg-slate-50/50 group cursor-help transition-all hover:border-indigo-400 hover:bg-white hover:shadow-xl"
             >
-              <div className="flex justify-between items-end mb-4">
-                <div>
-                  <h4 className="text-lg font-bold text-slate-900">{m.label}</h4>
-                  <p className="text-sm text-slate-500">{m.desc}</p>
+              <div className="flex justify-between items-start mb-4">
+                <div className="flex-1">
+                  <h4 className="text-lg font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{m.label}</h4>
+                  <p className="text-sm text-slate-500 font-medium">{m.desc}</p>
                 </div>
-                <span className="text-2xl font-black text-slate-900">{m.value}%</span>
+                <div className="ml-4 font-black text-2xl text-slate-900 tracking-tighter">{m.value}%</div>
               </div>
               
-              <div className="w-full bg-white h-3 rounded-full overflow-hidden border border-slate-200">
+              <div className="w-full bg-slate-200 h-4 rounded-full overflow-hidden mb-2 shadow-inner">
                 <div 
-                  className={`h-full transition-all duration-1000 ease-out ${m.color}`}
-                  style={{ width: `${m.value}%` }}
+                  className="h-full transition-all duration-1000 ease-out rounded-full shadow-md"
+                  style={{ width: `${Math.max(5, m.value)}%`, backgroundColor: m.color }}
                 />
               </div>
 
-              {/* Hover Details - Simple explanation */}
-              <div className={`mt-4 overflow-hidden transition-all duration-300 ${hoveredMetric === m.key ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0'}`}>
-                <p className="text-sm text-indigo-600 font-bold leading-relaxed bg-indigo-50 p-3 rounded-xl border border-indigo-100">
+              {/* Hover Detail */}
+              <div className={`transition-all duration-300 ease-in-out ${hoveredMetric === m.key ? 'mt-4 opacity-100 max-h-40' : 'opacity-0 max-h-0 overflow-hidden'}`}>
+                <div className="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 text-sm text-slate-700 font-bold leading-relaxed shadow-sm">
                   {m.detail}
-                </p>
+                </div>
               </div>
             </div>
           ))}
@@ -144,49 +139,54 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Simplified Recommendations */}
+        {/* Simple To-Do List */}
         <article className="bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm">
           <h3 className="text-xl font-display font-black text-slate-900 mb-6 flex items-center gap-3">
-            <span className="w-2 h-8 bg-indigo-600 rounded-full"></span>
-            Easy Changes to Try
+            <span className="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><Icons.CheckCircle /></span>
+            Things to try tonight
           </h3>
           <div className="space-y-4">
-            {analysis.recommendations.map((rec, idx) => (
-              <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <div className="flex-shrink-0 mt-1 text-emerald-500">
+            {analysis.recommendations && analysis.recommendations.length > 0 ? analysis.recommendations.map((rec, idx) => (
+              <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:bg-emerald-50 hover:border-emerald-200 transition-all">
+                <div className="flex-shrink-0 mt-0.5 text-emerald-600">
                   <Icons.CheckCircle />
                 </div>
-                <p className="text-slate-700 font-bold text-sm leading-snug">{rec}</p>
+                <p className="text-slate-800 font-bold text-sm leading-relaxed">{rec}</p>
               </div>
-            ))}
+            )) : (
+              <div className="p-4 rounded-2xl bg-slate-50 text-slate-500 font-medium italic text-center border border-dashed border-slate-200">
+                Wait for tips...
+              </div>
+            )}
           </div>
         </article>
 
-        {/* Why this happens */}
+        {/* The Why */}
         <article className="bg-white border border-slate-200 p-8 rounded-[2rem] shadow-sm">
           <h3 className="text-xl font-display font-black text-slate-900 mb-6 flex items-center gap-3">
-            <span className="w-2 h-8 bg-purple-600 rounded-full"></span>
-            What's Happening?
+            <span className="p-2 bg-indigo-50 text-indigo-600 rounded-lg"><Icons.Zap /></span>
+            What's going on?
           </h3>
           <div className="space-y-4">
             {analysis.scientificInsights.map((insight, idx) => (
               <div key={idx} className="flex gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                <div className="w-8 h-8 rounded-lg bg-white shadow-sm border border-slate-100 flex items-center justify-center flex-shrink-0 text-indigo-600 font-black text-sm">
+                <div className="w-7 h-7 rounded-full bg-indigo-600 shadow-lg shadow-indigo-200 flex items-center justify-center flex-shrink-0 text-white font-black text-xs">
                   {idx + 1}
                 </div>
-                <p className="text-slate-600 text-sm font-medium italic leading-relaxed">{insight}</p>
+                <p className="text-slate-600 text-sm font-medium leading-relaxed italic">{insight}</p>
               </div>
             ))}
           </div>
         </article>
       </div>
 
-      <div className="flex justify-center pb-20">
+      <div className="flex justify-center pb-20 pt-10">
         <button
           onClick={onReset}
-          className="px-12 py-5 bg-[#4f46e5] hover:bg-[#4338ca] text-white font-black rounded-[1.5rem] transition-all shadow-xl shadow-indigo-200 uppercase tracking-widest text-sm"
+          className="px-14 py-5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-[1.5rem] transition-all shadow-xl shadow-indigo-200 uppercase tracking-widest text-sm flex items-center gap-3"
         >
-          Check Again
+          <Icons.Moon />
+          Start a New Check
         </button>
       </div>
     </div>

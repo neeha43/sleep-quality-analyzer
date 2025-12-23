@@ -52,24 +52,29 @@ export const analyzeSleepQualityLocal = (data: SleepData): AnalysisResponse => {
 
   // Plain English Recommendations
   const recommendations: string[] = [];
-  if (data.blueLightExposure > 1) recommendations.push("Put your phone away 1 hour before bed. The bright screen tricks your brain into thinking it is daytime.");
-  if (data.environment.temperature !== 'optimal') recommendations.push(`Try to make your room a bit cooler. Your body sleeps much better when you aren't feeling too warm.`);
-  if (data.caffeineIntake === 'moderate' || data.caffeineIntake === 'high') recommendations.push("Try to stop drinking coffee or tea after lunch. Caffeine stays in your body much longer than you think.");
-  if (data.latency > 30) recommendations.push("If you can't fall asleep, try simple deep breathing. It tells your body it is safe to relax and drift off.");
-  if (data.duration < 7) recommendations.push("Try to get to bed just 20 minutes earlier tonight. Even a small increase in sleep time makes a big difference.");
+  if (data.blueLightExposure > 1) recommendations.push("Put your phone away 1 hour before bed. The bright light stops your brain from getting sleepy.");
+  if (data.environment.temperature !== 'optimal') recommendations.push(`Cool your room down. Your body sleeps best when it's slightly chilly.`);
+  if (data.caffeineIntake !== 'none') recommendations.push("Try to avoid coffee or tea after 2 PM. It stays in your system for many hours.");
+  if (data.latency > 20) recommendations.push("Try a few deep breaths when you get into bed to help your body relax faster.");
+  
+  // Guarantee at least 2 recommendations
+  if (recommendations.length < 2) {
+    recommendations.push("Keep your wake-up time the same every day, even on weekends, to stay in a good rhythm.");
+    recommendations.push("Try to get 15 minutes of natural sunlight every morning to help you sleep better at night.");
+  }
 
   // Simple Human Insights
   const scientificInsights: string[] = [
-    `Your stress level of ${data.stressLevel}/10 means your brain is staying on 'high alert,' making it harder for you to fall into a deep, restful sleep.`,
-    `Since it takes you ${data.latency} minutes to fall asleep, your body might still be too active from ${data.blueLightExposure > 1 ? 'screen use' : 'daily activities'} when you hit the pillow.`,
-    `The noise level in your room (${data.environment.noise}/10) might be waking you up for split seconds throughout the night, leaving you feeling tired even if you don't remember waking up.`
+    `Your stress level of ${data.stressLevel}/10 makes it hard for your brain to 'switch off' when you try to sleep.`,
+    `Since it takes ${data.latency} minutes to fall asleep, your mind might still be thinking about the day's tasks.`,
+    `The noise level (${data.environment.noise}/10) might be making your sleep lighter than it should be.`
   ];
 
   const summaryPillars = {
-    efficiency: "how well you actually sleep while in bed",
-    consistency: "how regular your sleep routine is",
-    environment: "how comfortable your bedroom is",
-    lifestyle: "how your daily habits affect your rest"
+    efficiency: "your actual rest quality",
+    consistency: "your sleep schedule",
+    environment: "your bedroom comfort",
+    lifestyle: "your daily habits"
   };
 
   const weakestAreaKey = Object.entries(finalBreakdown).sort((a,b) => a[1]-b[1])[0][0] as keyof typeof summaryPillars;
@@ -78,7 +83,7 @@ export const analyzeSleepQualityLocal = (data: SleepData): AnalysisResponse => {
     score: totalScore,
     qualityLabel: label,
     breakdown: finalBreakdown,
-    summary: `Your sleep is rated as ${label}. Right now, the biggest thing holding you back is ${summaryPillars[weakestAreaKey]}. Improving this will help you wake up feeling much more refreshed.`,
+    summary: `Your sleep is ${label}. Right now, ${summaryPillars[weakestAreaKey]} needs the most attention. Improving this will help you feel much better!`,
     recommendations: recommendations.slice(0, 4),
     scientificInsights
   };
