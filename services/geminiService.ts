@@ -6,10 +6,8 @@ import { SleepData, AnalysisResponse } from "../types";
  */
 const parseJSONResponse = (text: string) => {
   try {
-    // Attempt direct parse first
     return JSON.parse(text);
   } catch (e) {
-    // If it fails, try to find a JSON block between curly braces
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       try {
@@ -23,9 +21,9 @@ const parseJSONResponse = (text: string) => {
 };
 
 export const analyzeSleepQuality = async (data: SleepData): Promise<AnalysisResponse> => {
-  // Always initialize fresh to ensure latest config/key usage
+  // Always initialize fresh to ensure latest config/key usage from the environment
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  const model = 'gemini-3-flash-preview';
+  const model = 'gemini-3-pro-preview';
   
   const prompt = `
     Analyze this sleep data and provide a comprehensive evaluation in JSON format only.
@@ -46,8 +44,8 @@ export const analyzeSleepQuality = async (data: SleepData): Promise<AnalysisResp
     1. Calculate a Sleep Quality Index (SQI) score from 0-100.
     2. Provide 4 breakdown scores (efficiency, consistency, environment, lifestyle).
     3. Generate 3-4 actionable recommendations.
-    4. Provide 2-3 scientific insights explaining the biological impact of their specific data points.
-    5. Return ONLY a valid JSON object matching the requested schema. Do not include any introductory text.
+    4. Provide 2-3 scientific insights explaining the biological impact of their specific data.
+    5. Return ONLY a valid JSON object matching the requested schema.
   `;
 
   try {
@@ -59,8 +57,8 @@ export const analyzeSleepQuality = async (data: SleepData): Promise<AnalysisResp
         responseSchema: {
           type: Type.OBJECT,
           properties: {
-            score: { type: Type.NUMBER, description: "Overall score 0-100" },
-            qualityLabel: { type: Type.STRING, description: "Excellent, Good, Fair, Poor, or Critical" },
+            score: { type: Type.NUMBER },
+            qualityLabel: { type: Type.STRING },
             breakdown: {
               type: Type.OBJECT,
               properties: {
@@ -87,10 +85,7 @@ export const analyzeSleepQuality = async (data: SleepData): Promise<AnalysisResp
     });
 
     const text = response.text;
-    if (!text) {
-      throw new Error("Empty response from AI services.");
-    }
-
+    if (!text) throw new Error("Empty response from AI services.");
     return parseJSONResponse(text);
   } catch (error: any) {
     console.error("Gemini API Error:", error);

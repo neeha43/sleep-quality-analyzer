@@ -9,16 +9,15 @@ import { PrivacyPolicy, TermsOfService, AboutUs, ContactUs } from './components/
 
 type ViewState = 'home' | 'privacy' | 'terms' | 'about' | 'contact';
 
-// Define AIStudio interface to match the environment's global type
-interface AIStudio {
-  hasSelectedApiKey(): Promise<boolean>;
-  openSelectKey(): Promise<void>;
-}
-
+// Removed local AIStudio interface to avoid conflict with potential global definition
 declare global {
   interface Window {
-    // Fixed: All declarations of 'aistudio' must have identical modifiers (readonly, optional) and types
-    readonly aistudio?: AIStudio;
+    // Fixed: Removed 'readonly' and '?' modifiers to match environment-provided declarations
+    // and inlined the type to prevent "AIStudio" naming collisions.
+    aistudio: {
+      hasSelectedApiKey(): Promise<boolean>;
+      openSelectKey(): Promise<void>;
+    };
   }
 }
 
@@ -35,12 +34,20 @@ const App: React.FC = () => {
     if (!consent) setShowCookieBanner(true);
 
     const checkKey = async () => {
-      // API Key check logic following the guideline hierarchy
-      if (process.env.API_KEY) {
+      // Priority 1: Check injected env variable
+      if (process.env.API_KEY && process.env.API_KEY !== 'undefined' && process.env.API_KEY !== '') {
         setHasApiKey(true);
-      } else if (window.aistudio) {
-        const selected = await window.aistudio.hasSelectedApiKey();
-        setHasApiKey(selected);
+        return;
+      }
+      
+      // Priority 2: Check platform helper
+      if (window.aistudio) {
+        try {
+          const selected = await window.aistudio.hasSelectedApiKey();
+          setHasApiKey(selected);
+        } catch (e) {
+          setHasApiKey(false);
+        }
       } else {
         setHasApiKey(false);
       }
@@ -55,11 +62,14 @@ const App: React.FC = () => {
 
   const handleSelectKey = async () => {
     if (window.aistudio) {
-      await window.aistudio.openSelectKey();
-      // Assume success as per guidelines to avoid race condition:
-      // "A race condition can occur where hasSelectedApiKey() may not immediately return true...
-      // you MUST assume the key selection was successful after triggering openSelectKey() and proceed"
-      setHasApiKey(true);
+      try {
+        await window.aistudio.openSelectKey();
+        // As per guidelines: Assume success immediately to avoid race conditions
+        setHasApiKey(true);
+        setError(null);
+      } catch (e) {
+        console.error("Failed to open key selector", e);
+      }
     }
   };
 
@@ -71,12 +81,14 @@ const App: React.FC = () => {
       setAnalysis(result);
     } catch (err: any) {
       console.error("Assessment Error:", err);
-      // Fixed: Handle "Requested entity was not found" error by resetting selection state as per guidelines
-      if (err?.message?.includes("API Key") || err?.message?.includes("Requested entity was not found.")) {
+      const errorMessage = err?.message || String(err);
+      
+      if (errorMessage.includes("API Key") || errorMessage.includes("Requested entity was not found.")) {
+        // As per guidelines: If it fails with "not found", reset key selection
         setHasApiKey(false);
-        setError("API Key verification failed. Please ensure you have selected a valid key from a paid GCP project.");
+        setError("Your API key selection is invalid or has expired. Please connect a valid key from a paid GCP project.");
       } else {
-        setError("Unable to reach the analysis engine. Please check your connection and try again.");
+        setError("We encountered an error analyzing your data. Please try again in a moment.");
       }
     } finally {
       setIsLoading(false);
@@ -98,12 +110,12 @@ const App: React.FC = () => {
             <Icons.Zap />
           </div>
           <div className="space-y-4">
-            <h2 className="text-3xl font-display font-black text-slate-900">API Connection Required</h2>
+            <h2 className="text-3xl font-display font-black text-slate-900">AI Connection Required</h2>
             <p className="text-slate-600 leading-relaxed">
-              To process your sleep data using Gemini AI, you need to connect an API key from a paid Google Cloud project.
+              RestPulse uses the Gemini 3 Pro model for advanced biological analysis. This requires an active API key from a paid Google Cloud project.
             </p>
             <p className="text-xs text-slate-400">
-              Visit the <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline">billing documentation</a> for setup instructions.
+              Check the <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline">billing documentation</a> for details.
             </p>
           </div>
           <button 
