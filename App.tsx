@@ -1,58 +1,22 @@
-
 import React, { useState, useEffect } from 'react';
 import { SleepData, AnalysisResponse } from './types';
 import SleepForm from './components/SleepForm';
 import AnalysisDisplay from './components/AnalysisDisplay';
-import { analyzeSleepQuality } from './services/geminiService';
+import { analyzeSleepQualityLocal } from './services/sleepAnalysisService';
 import { Icons } from './constants';
 import { PrivacyPolicy, TermsOfService, AboutUs, ContactUs } from './components/LegalContent';
 
 type ViewState = 'home' | 'privacy' | 'terms' | 'about' | 'contact';
 
-// Removed local AIStudio interface to avoid conflict with potential global definition
-declare global {
-  interface Window {
-    // Fixed: Removed 'readonly' and '?' modifiers to match environment-provided declarations
-    // and inlined the type to prevent "AIStudio" naming collisions.
-    aistudio: {
-      hasSelectedApiKey(): Promise<boolean>;
-      openSelectKey(): Promise<void>;
-    };
-  }
-}
-
 const App: React.FC = () => {
   const [view, setView] = useState<ViewState>('home');
   const [analysis, setAnalysis] = useState<AnalysisResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [showCookieBanner, setShowCookieBanner] = useState(false);
-  const [hasApiKey, setHasApiKey] = useState<boolean | null>(null);
 
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
     if (!consent) setShowCookieBanner(true);
-
-    const checkKey = async () => {
-      // Priority 1: Check injected env variable
-      if (process.env.API_KEY && process.env.API_KEY !== 'undefined' && process.env.API_KEY !== '') {
-        setHasApiKey(true);
-        return;
-      }
-      
-      // Priority 2: Check platform helper
-      if (window.aistudio) {
-        try {
-          const selected = await window.aistudio.hasSelectedApiKey();
-          setHasApiKey(selected);
-        } catch (e) {
-          setHasApiKey(false);
-        }
-      } else {
-        setHasApiKey(false);
-      }
-    };
-    checkKey();
   }, []);
 
   const handleCookieAccept = () => {
@@ -60,74 +24,24 @@ const App: React.FC = () => {
     setShowCookieBanner(false);
   };
 
-  const handleSelectKey = async () => {
-    if (window.aistudio) {
-      try {
-        await window.aistudio.openSelectKey();
-        // As per guidelines: Assume success immediately to avoid race conditions
-        setHasApiKey(true);
-        setError(null);
-      } catch (e) {
-        console.error("Failed to open key selector", e);
-      }
-    }
-  };
-
-  const handleFormSubmit = async (data: SleepData) => {
+  const handleFormSubmit = (data: SleepData) => {
     setIsLoading(true);
-    setError(null);
-    try {
-      const result = await analyzeSleepQuality(data);
+    
+    // Simulate a brief calculation delay for better UX
+    setTimeout(() => {
+      const result = analyzeSleepQualityLocal(data);
       setAnalysis(result);
-    } catch (err: any) {
-      console.error("Assessment Error:", err);
-      const errorMessage = err?.message || String(err);
-      
-      if (errorMessage.includes("API Key") || errorMessage.includes("Requested entity was not found.")) {
-        // As per guidelines: If it fails with "not found", reset key selection
-        setHasApiKey(false);
-        setError("Your API key selection is invalid or has expired. Please connect a valid key from a paid GCP project.");
-      } else {
-        setError("We encountered an error analyzing your data. Please try again in a moment.");
-      }
-    } finally {
       setIsLoading(false);
-    }
+    }, 800);
   };
 
   const resetApp = () => {
     setAnalysis(null);
-    setError(null);
     setView('home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const renderHome = () => {
-    if (hasApiKey === false) {
-      return (
-        <div className="max-w-xl mx-auto py-20 text-center space-y-8 animate-in fade-in slide-in-from-bottom-8">
-          <div className="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto">
-            <Icons.Zap />
-          </div>
-          <div className="space-y-4">
-            <h2 className="text-3xl font-display font-black text-slate-900">AI Connection Required</h2>
-            <p className="text-slate-600 leading-relaxed">
-              RestPulse uses the Gemini 3 Pro model for advanced biological analysis. This requires an active API key from a paid Google Cloud project.
-            </p>
-            <p className="text-xs text-slate-400">
-              Check the <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener noreferrer" className="text-indigo-600 underline">billing documentation</a> for details.
-            </p>
-          </div>
-          <button 
-            onClick={handleSelectKey}
-            className="px-10 py-4 bg-[#4f46e5] text-white font-black rounded-2xl shadow-xl shadow-indigo-200 hover:bg-[#4338ca] transition-all uppercase tracking-widest text-sm"
-          >
-            Connect Gemini API
-          </button>
-        </div>
-      );
-    }
-
     return !analysis ? (
       <section className="space-y-12">
         <div className="text-center space-y-6 max-w-3xl mx-auto">
@@ -135,23 +49,17 @@ const App: React.FC = () => {
             Unlock Your Best Night's <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">Sleep.</span>
           </h1>
           <p className="text-slate-600 text-lg md:text-xl font-medium max-w-2xl mx-auto leading-relaxed">
-            Advanced AI-powered analysis to decode your sleep patterns and provide actionable scientific insights for restorative rest.
+            Advanced biological scoring to decode your sleep patterns and provide actionable scientific insights for restorative rest.
           </p>
         </div>
-
-        {error && (
-          <div role="alert" className="bg-rose-50 border border-rose-200 p-6 rounded-2xl text-rose-600 font-bold text-center max-w-lg mx-auto animate-in fade-in slide-in-from-bottom-4">
-            <p>{error}</p>
-          </div>
-        )}
 
         <SleepForm onSubmit={handleFormSubmit} isLoading={isLoading} />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12">
           <article className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-indigo-600 mb-4" aria-hidden="true"><Icons.Zap /></div>
-            <h2 className="text-slate-900 font-bold text-lg mb-2">Instant AI Analysis</h2>
-            <p className="text-slate-600 text-sm leading-relaxed">Get immediate feedback on your sleep efficiency using deep-reasoning biological modeling specifically tuned for human sleep architecture.</p>
+            <h2 className="text-slate-900 font-bold text-lg mb-2">Local Privacy</h2>
+            <p className="text-slate-600 text-sm leading-relaxed">Your data never leaves your device. All sleep analysis is performed locally in your browser for 100% privacy.</p>
           </article>
           <article className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-purple-600 mb-4" aria-hidden="true"><Icons.CheckCircle /></div>
@@ -160,8 +68,8 @@ const App: React.FC = () => {
           </article>
           <article className="p-8 rounded-3xl bg-white border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
             <div className="text-emerald-600 mb-4" aria-hidden="true"><Icons.Info /></div>
-            <h2 className="text-slate-900 font-bold text-lg mb-2">Sleep Science Data</h2>
-            <p className="text-slate-600 text-sm leading-relaxed">Our insights are grounded in modern chronobiology research and clinical sleep studies to help you optimize your recovery phase.</p>
+            <h2 className="text-slate-900 font-bold text-lg mb-2">Biological Scoring</h2>
+            <p className="text-slate-600 text-sm leading-relaxed">Our SQI index maps your habits against established chronobiology research to help you optimize your recovery phase.</p>
           </article>
         </div>
       </section>
@@ -216,7 +124,7 @@ const App: React.FC = () => {
               </div>
               <span className="font-display font-black text-slate-900">RESTPULSE</span>
             </div>
-            <p className="text-slate-500 leading-relaxed">Advanced Sleep Hygiene Assessment. Empowering individuals with AI-driven biological insights.</p>
+            <p className="text-slate-500 leading-relaxed">Advanced Sleep Hygiene Assessment. Empowering individuals with science-driven biological insights.</p>
           </div>
           <div>
             <h3 className="font-bold text-slate-900 mb-4 uppercase text-xs tracking-widest">Platform</h3>
@@ -234,7 +142,7 @@ const App: React.FC = () => {
           </div>
           <div>
              <h3 className="font-bold text-slate-900 mb-4 uppercase text-xs tracking-widest">Methodology</h3>
-             <p className="text-slate-400 text-xs">Our Sleep Quality Index (SQI) algorithm uses Generative AI to map behavioral data to known sleep wellness patterns.</p>
+             <p className="text-slate-400 text-xs">Our Sleep Quality Index (SQI) algorithm uses local heuristic mapping to visualize sleep wellness patterns.</p>
           </div>
         </div>
       </footer>
