@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { SleepData } from '../types';
 import { Icons } from '../constants';
 
@@ -24,6 +24,10 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
     }
   });
 
+  // Local state for the duration input to allow free typing (including clearing the field)
+  const [durationInput, setDurationInput] = useState(formData.duration.toString());
+  const [durationError, setDurationError] = useState<string | null>(null);
+
   const handleNext = (e: React.MouseEvent) => {
     e.preventDefault();
     setStep(prev => Math.min(prev + 1, 3));
@@ -38,6 +42,48 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
     e.preventDefault();
     if (step === 3 && !isLoading) {
       onSubmit(formData);
+    }
+  };
+
+  // Sync manual input when slider moves
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseFloat(e.target.value);
+    setFormData({ ...formData, duration: val });
+    setDurationInput(val.toString());
+    setDurationError(null);
+  };
+
+  // Handle manual typing
+  const handleManualDurationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valStr = e.target.value;
+    setDurationInput(valStr);
+    
+    const valNum = parseFloat(valStr);
+    if (isNaN(valNum)) {
+      setDurationError("Please enter a number");
+    } else if (valNum < 3) {
+      setDurationError("Minimum hours should be 3");
+    } else if (valNum > 14) {
+      setDurationError("Maximum hours is 14");
+    } else {
+      setDurationError(null);
+      setFormData({ ...formData, duration: valNum });
+    }
+  };
+
+  // Enforce range on blur
+  const handleDurationBlur = () => {
+    let valNum = parseFloat(durationInput);
+    if (isNaN(valNum) || valNum < 3) {
+      valNum = 3;
+      setDurationInput("3");
+      setDurationError(null);
+      setFormData({ ...formData, duration: 3 });
+    } else if (valNum > 14) {
+      valNum = 14;
+      setDurationInput("14");
+      setDurationError(null);
+      setFormData({ ...formData, duration: 14 });
     }
   };
 
@@ -67,17 +113,49 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
             </h3>
             
             <div className="space-y-4">
-              <label className="block text-slate-700 text-sm font-bold">How many hours do you usually sleep?</label>
-              <input 
-                type="range" min="3" max="14" step="0.5"
-                value={formData.duration}
-                onChange={(e) => setFormData({...formData, duration: parseFloat(e.target.value)})}
-                className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-              />
-              <div className="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                <span className="text-slate-400 font-medium italic text-sm">Most people need 7-9 hours</span>
-                <span className="text-indigo-600 font-black text-2xl">{formData.duration}<small className="text-sm font-bold text-slate-400 ml-1">hrs</small></span>
+              <div className="flex justify-between items-end">
+                <label className="block text-slate-700 text-sm font-bold">How many hours do you usually sleep?</label>
+                <div className="flex flex-col items-end gap-1">
+                  <div className={`flex items-center gap-2 px-3 py-1 rounded-xl border transition-colors ${durationError ? 'bg-rose-50 border-rose-200' : 'bg-indigo-50 border-indigo-100'}`}>
+                    <input 
+                      type="text" 
+                      value={durationInput}
+                      onChange={handleManualDurationChange}
+                      onBlur={handleDurationBlur}
+                      className={`w-12 bg-transparent font-black text-lg focus:outline-none text-center ${durationError ? 'text-rose-600' : 'text-indigo-600'}`}
+                    />
+                    <span className={`font-bold text-xs uppercase ${durationError ? 'text-rose-400' : 'text-indigo-400'}`}>hrs</span>
+                  </div>
+                </div>
               </div>
+              
+              {durationError && (
+                <p className="text-rose-500 text-xs font-bold animate-pulse">{durationError}</p>
+              )}
+
+              <div className="relative h-6 flex items-center group">
+                {/* Visible track line */}
+                <div className="absolute w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                   <div 
+                    className="h-full bg-indigo-100 transition-all" 
+                    style={{ width: `${((formData.duration - 3) / 11) * 100}%` }}
+                   />
+                </div>
+                <input 
+                  type="range" min="3" max="14" step="0.5"
+                  value={formData.duration}
+                  onChange={handleSliderChange}
+                  className="absolute w-full appearance-none bg-transparent cursor-pointer z-10 
+                    [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 
+                    [&::-webkit-slider-thumb]:bg-indigo-600 [&::-webkit-slider-thumb]:rounded-full 
+                    [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white
+                    [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-indigo-200
+                    [&::-moz-range-thumb]:w-6 [&::-moz-range-thumb]:h-6 
+                    [&::-moz-range-thumb]:bg-indigo-600 [&::-moz-range-thumb]:rounded-full 
+                    [&::-moz-range-thumb]:border-4 [&::-moz-range-thumb]:border-white"
+                />
+              </div>
+              <p className="text-slate-400 font-medium italic text-xs">Recommended: 7-9 hours for most adults.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -86,7 +164,7 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
                 <input 
                   type="number" min="0" max="300"
                   value={formData.latency}
-                  onChange={(e) => setFormData({...formData, latency: parseInt(e.target.value)})}
+                  onChange={(e) => setFormData({...formData, latency: parseInt(e.target.value) || 0})}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                 />
               </div>
@@ -96,7 +174,7 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
                 <input 
                   type="number" min="0" max="20"
                   value={formData.awakenings}
-                  onChange={(e) => setFormData({...formData, awakenings: parseInt(e.target.value)})}
+                  onChange={(e) => setFormData({...formData, awakenings: parseInt(e.target.value) || 0})}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
                 />
               </div>
@@ -145,7 +223,7 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
               <input 
                 type="number" min="0" max="8" step="0.5"
                 value={formData.blueLightExposure}
-                onChange={(e) => setFormData({...formData, blueLightExposure: parseFloat(e.target.value)})}
+                onChange={(e) => setFormData({...formData, blueLightExposure: parseFloat(e.target.value) || 0})}
                 className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500"
               />
             </div>
@@ -182,12 +260,24 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
 
               <div className="space-y-4">
                 <label className="block text-slate-700 text-sm font-bold">Room Noise Level</label>
-                <input 
-                  type="range" min="1" max="10"
-                  value={formData.environment.noise}
-                  onChange={(e) => setFormData({...formData, environment: {...formData.environment, noise: parseInt(e.target.value)}})}
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                />
+                <div className="relative h-6 flex items-center">
+                   <div className="absolute w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-indigo-100 transition-all" 
+                        style={{ width: `${((formData.environment.noise - 1) / 9) * 100}%` }}
+                      />
+                   </div>
+                   <input 
+                    type="range" min="1" max="10"
+                    value={formData.environment.noise}
+                    onChange={(e) => setFormData({...formData, environment: {...formData.environment, noise: parseInt(e.target.value)}})}
+                    className="absolute w-full appearance-none bg-transparent cursor-pointer z-10 
+                      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 
+                      [&::-webkit-slider-thumb]:bg-indigo-600 [&::-webkit-slider-thumb]:rounded-full 
+                      [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white
+                      [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-indigo-200"
+                  />
+                </div>
                 <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-tighter">
                   <span>Quiet</span>
                   <span className="text-indigo-600">Level {formData.environment.noise}</span>
@@ -197,12 +287,24 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
 
               <div className="space-y-4">
                 <label className="block text-slate-700 text-sm font-bold">Room Light Level</label>
-                <input 
-                  type="range" min="1" max="10"
-                  value={formData.environment.light}
-                  onChange={(e) => setFormData({...formData, environment: {...formData.environment, light: parseInt(e.target.value)}})}
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                />
+                <div className="relative h-6 flex items-center">
+                  <div className="absolute w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-indigo-100 transition-all" 
+                      style={{ width: `${((formData.environment.light - 1) / 9) * 100}%` }}
+                    />
+                  </div>
+                  <input 
+                    type="range" min="1" max="10"
+                    value={formData.environment.light}
+                    onChange={(e) => setFormData({...formData, environment: {...formData.environment, light: parseInt(e.target.value)}})}
+                    className="absolute w-full appearance-none bg-transparent cursor-pointer z-10 
+                      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 
+                      [&::-webkit-slider-thumb]:bg-indigo-600 [&::-webkit-slider-thumb]:rounded-full 
+                      [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-white
+                      [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:shadow-indigo-200"
+                  />
+                </div>
                 <div className="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-tighter">
                   <span>Dark</span>
                   <span className="text-indigo-600">Level {formData.environment.light}</span>
@@ -235,9 +337,9 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
           ) : (
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !!durationError}
               className={`flex-[2] py-5 px-6 rounded-2xl font-black transition-all shadow-xl flex items-center justify-center gap-3 uppercase tracking-widest text-sm bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 ${
-                isLoading ? 'opacity-50 cursor-not-allowed' : 'active:scale-[0.98]'
+                (isLoading || !!durationError) ? 'opacity-50 cursor-not-allowed' : 'active:scale-[0.98]'
               }`}
             >
               {isLoading ? (
@@ -246,10 +348,10 @@ const SleepForm: React.FC<SleepFormProps> = ({ onSubmit, isLoading }) => {
                   Analyzing...
                 </>
               ) : (
-                <>
+                <span className="flex items-center gap-2">
                   <Icons.Zap />
                   Generate Insights
-                </>
+                </span>
               )}
             </button>
           )}

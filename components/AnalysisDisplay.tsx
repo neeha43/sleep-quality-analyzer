@@ -102,7 +102,7 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
           <span className="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><Icons.Info /></span>
           The Breakdown
         </h3>
-        <p className="text-slate-500 mb-8 font-medium">Hover to learn more about each part.</p>
+        <p className="text-slate-500 mb-8 font-medium italic">Hover over each card for details.</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {metrics.map((m) => (
