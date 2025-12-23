@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import { AnalysisResponse } from '../types';
@@ -139,7 +138,7 @@ const AnalysisDisplay: React.FC<AnalysisDisplayProps> = ({ analysis, onReset }) 
       <div className="flex justify-center pb-20">
         <button
           onClick={onReset}
-          className="px-12 py-5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-[1.5rem] transition-all shadow-xl shadow-indigo-200 uppercase tracking-widest text-sm"
+          className="px-12 py-5 bg-[#4f46e5] hover:bg-[#4338ca] text-white font-black rounded-[1.5rem] transition-all shadow-xl shadow-indigo-200 uppercase tracking-widest text-sm"
         >
           New Assessment
         </button>

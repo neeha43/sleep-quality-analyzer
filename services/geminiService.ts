@@ -23,10 +23,7 @@ const parseJSONResponse = (text: string) => {
 };
 
 export const analyzeSleepQuality = async (data: SleepData): Promise<AnalysisResponse> => {
-  if (!process.env.API_KEY) {
-    throw new Error("API Key is missing. Please ensure your environment is configured.");
-  }
-
+  // Always initialize fresh to ensure latest config/key usage
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const model = 'gemini-3-flash-preview';
   
