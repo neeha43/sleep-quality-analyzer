@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://sleep-quality-analyzer.pages.dev/sitemap.xml
