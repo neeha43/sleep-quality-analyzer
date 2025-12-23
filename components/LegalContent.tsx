@@ -4,7 +4,7 @@ export const PrivacyPolicy: React.FC = () => (
   <div className="prose prose-slate max-w-none animate-in fade-in duration-500">
     <h1 className="text-3xl font-display font-black text-slate-900 mb-6">Privacy Policy</h1>
     <p className="text-slate-600 mb-4">Last Updated: May 20, 2024</p>
-    <p className="mb-4">At RestPulse, accessible from somnus-ai-analyzer.vercel.app, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by RestPulse and how we use it.</p>
+    <p className="mb-4">At RestPulse, accessible from sleep-quality-analyzer.pages.dev, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by RestPulse and how we use it.</p>
     
     <h2 className="text-xl font-bold mt-8 mb-4">Log Files</h2>
     <p className="mb-4">RestPulse follows a standard procedure of using log files. These files log visitors when they visit websites. All hosting companies do this and a part of hosting services' analytics. The information collected by log files include internet protocol (IP) addresses, browser type, Internet Service Provider (ISP), date and time stamp, referring/exit pages, and possibly the number of clicks.</p>
