@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://somnus-ai-analyzer.vercel.app/sitemap.xml
+Sitemap: https://sleep-quality-analyzer.pages.dev/sitemap.xml
